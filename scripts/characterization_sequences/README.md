@@ -3,7 +3,9 @@
 ## Requisitos:
 
  > metastudent (apt install metastudent)
+
  > pandas (pip install pandas)
+
  > biopython (pip install biopython)
 
 ## Ejecución:
