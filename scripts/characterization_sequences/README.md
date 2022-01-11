@@ -1,10 +1,12 @@
-# Requisitos:
+# Caracterizador de secuencias protéicas.
+
+## Requisitos:
 
  > metastudent (apt install metastudent)
  > pandas (pip install pandas)
  > biopython (pip install biopython)
 
-# Ejecución:
+## Ejecución:
 
 > python3 characterization.py test.csv
 
@@ -12,4 +14,6 @@
 
 El archivo .csv con las secuencias tiene que tener las columnas [id,sequence].
 
-(ver el archivo test.csv)
+Archivo de prueba: test.csv
+
+Resultados: test_results.csv
