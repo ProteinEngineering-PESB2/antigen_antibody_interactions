@@ -3,15 +3,20 @@
 ## Requisitos:
 
  > pandas (pip install pandas)
+ 
  > biopython (pip install biopython)
+ 
  > numpy (pip install numpy)
+ 
  > selenium (pip install selenium)
 
 ## Ejecución:
 Ejecutar en orden
 
  > python3 search_uniprot.py test.csv
+
  > python3 search_alphafold.py
+
  > python3 Build_Dataset.py test.csv
 
 ## Consideraciones:
