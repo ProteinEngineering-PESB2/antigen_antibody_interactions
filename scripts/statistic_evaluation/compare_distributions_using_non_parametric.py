@@ -12,11 +12,11 @@ def apply_test(data1, data2, significance_level):
         return 0
 
 dataset = pd.read_csv(sys.argv[1])
-path_export = sys.argv[2]
+name_export = sys.argv[2]
 
 list_distributions = {}
 
-key_value = 'scaler_value'  #'value_intensity'
+key_value =  'value_intensity' #'scaler_value'  #'value_intensity'
 
 print("Get intensities")
 antibody_list = dataset['antibody'].unique()
@@ -50,4 +50,4 @@ for antibody1 in antibody_list:
 
 df_export = pd.DataFrame(matrix_comparison, columns=antibody_list)
 df_export['antibody'] = antibody_list
-df_export.to_csv(path_export+"summary_comparison_z_score_scaler_data.csv", index=False)
+df_export.to_csv(name_export, index=False)

@@ -10,7 +10,7 @@ name_export = sys.argv[2]
 
 list_distributions = {}
 
-key_value = 'scaler_value'  #'value_intensity'
+key_value =  'value_intensity' #'scaler_value'  #'value_intensity'
 print("Get intensities")
 antibody_list = dataset['antibody'].unique()
 for antibody in antibody_list:
