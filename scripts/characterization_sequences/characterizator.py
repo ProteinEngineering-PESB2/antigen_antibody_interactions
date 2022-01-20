@@ -124,6 +124,10 @@ def process(row):
         dict_all = process_go(dict_all, path_out)
         dict_all = process_pfam(dict_all, path_out)
         dict_all = process_structural(dict_all, path_out)
+        f = open("Success.txt", "a")
+        f.write(row[0] + "\n")
+        f.close()
+	
         print("exitoso", row[0])
     except:
         f = open("Errors.txt", "a")
