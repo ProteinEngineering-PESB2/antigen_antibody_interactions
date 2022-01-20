@@ -117,10 +117,10 @@ def process(row):
     id = row[0]
     print("procesando", row[0])
     try:
-        record = SeqRecord.SeqRecord(Seq.Seq(row.sequence), row.id, "", "")
+        record = SeqRecord.SeqRecord(Seq.Seq(row.seq), row.id_seq, "", "")
         path_out = "fasta/{}_temp.fasta".format(id)
         SeqIO.write(record, path_out, "fasta")
-        dict_all={"id": row.id, "sequence": row.sequence}
+        dict_all={"id": row.id_seq, "sequence": row.seq}
         dict_all = process_go(dict_all, path_out)
         dict_all = process_pfam(dict_all, path_out)
         dict_all = process_structural(dict_all, path_out)
@@ -129,7 +129,7 @@ def process(row):
         f = open("Errors.txt", "a")
         f.write(row[0] + "\n")
         f.close()
-        dict_all = {"id": row.id, "sequence": row.sequence}
+        dict_all = {"id": row.id_seq, "sequence": row.seq}
         print("fallido", row[0])
     return dict_all
 if __name__ == '__main__':
@@ -148,4 +148,4 @@ if __name__ == '__main__':
         characterized = p.map(process, data.iterrows())
     os.system("rm -r fasta temp")
     df = json_normalize(characterized)
-    df.to_csv("{}_result.csv".format(file.replace(".csv", "")), index=False)
+    df.to_csv(sys.argv[2], index=False)
