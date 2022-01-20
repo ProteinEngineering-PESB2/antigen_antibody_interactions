@@ -1,0 +1,44 @@
+1. Inputs
+    Secuencias de antígenos
+    Secuencias de anticuerpos
+        Cadena liviana 
+        Cadena Pesada
+
+2. Etapa 1: Obtención de estructuras
+    Status: Implementado
+    - Usar AlphaFold2 para obtener las estructuras de cadena pesada y liviana de las secuencias de los 
+    anticuerpos (ver drive)
+    - Identificar estructuras de antígenos contra alineamiento PDB: 
+        - Alinear contra PDB usando blast
+        - Obtener mejor resultado
+        - Descargar PDB -> Esto lo tiene pendiente Gabriel
+    - Identificar estructuras de antígenos contra alineamiento UNIPROT:
+        - Alinear contra uniprot usando blast 
+        - Obtener mejor score
+        - Obtener código uniprot
+        - Buscar el AlphaFold2
+        - Traer estructuras y descripción -> Pedir estructuras a Gabriel 
+    
+    Etapa 2: 
+        - Seleccionar cadena de antígeno que hizo match (función get_chain_antigen) 
+            -Qué hacer en el caso de AlphaFold2? -> Revisar PDB/estructuras
+        
+        -> Nota DMedina: Trabajar con toda la estructura OP1
+        -> Nota DMedina: Trabajar como lo menciona Yasna con sólo una cadena y ver qué hacer con 
+        las secuencias obtenidas de AlphaFold2
+        - Ver/revisar estructuras de antígenos, necesitamos que todos tengan las misma
+        estructura de cadenas (todas con el mismo ID)
+
+        - Función make_folder_and_copy_structures -> Armar con respecto a los ejemplos de 
+        interacción que tenemos, no todas las combinaciones.
+            - Crear carpeta con:
+                -Cadena liviana
+                -Cadena pesada
+                -PDB antigeno
+        - Revisar esto expuesto en el documento de Yasna 
+            La información de los archivos, los ids de las cadenas presentes, y las cadenas a emplear,
+            para cada interacción específica, son retornados a una lista, que se emplea en las funciones
+            posteriores.
+
+        - Revisar si from pdbfixer import PDBFixer está instalado en el cluster
+        - Armar complejos de anticuerpos 
