@@ -112,8 +112,6 @@ def process_structural(dict_all, fasta):
         pass
     dict_all["Structural"] = sub_dict
     return dict_all
-    #export data	
-    #dict_response_for_sequence.update({"structural_predict": dict_all})
 
 def get_properties(array_prop, array_seq):
 	dict_response = {value: array_seq.count(value.split("_")[0]) for value in array_prop}
@@ -128,9 +126,9 @@ def process(row):
         path_out = "fasta/{}_temp.fasta".format(id)
         SeqIO.write(record, path_out, "fasta")
         dict_all={"id": row.id_seq, "sequence": row.seq}
-        dict_all = process_go(dict_all, path_out)
-        dict_all = process_pfam(dict_all, path_out)
-        dict_all = process_structural(dict_all, path_out)
+        dict_all = process_go(dict_all, path_out, id)
+        #dict_all = process_pfam(dict_all, path_out)
+        #dict_all = process_structural(dict_all, path_out)
         f = open("Success.txt", "a")
         f.write(row[0] + "\n")
         f.close()
@@ -152,10 +150,11 @@ if __name__ == '__main__':
     except:
         pass
     file = sys.argv[1]
+    output = sys.argv[2]
     data = pd.read_csv(file)
     characterized = []
     with Pool(4) as p:
         characterized = p.map(process, data.iterrows())
     os.system("rm -r fasta temp")
     df = json_normalize(characterized)
-    df.to_csv(sys.argv[2], index=False)
+    df.to_csv(output, index=False)
