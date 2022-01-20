@@ -4,32 +4,38 @@ import subprocess, os, time
 from pandas import json_normalize
 from multiprocessing import Pool
 import sys
+import time
 def get_values_GO(filename, dictionary, go_type, go_abb):
-    file_now=open(filename, "r")
-    all_lines=file_now.read().split("\n")
-    if len(all_lines) > 1:
-        first_result= all_lines[0].split("\t")
-        dictionary[go_type+"_GO"]= first_result[1]
-        dictionary["Predict_value_"+go_abb]= first_result[2]
-    else:
-	    dictionary[go_type+"_GO"]= "Not results"
-	    dictionary["Predict_value_"+go_abb]= "-"
+    f = open(filename, "r")
+    all_lines=f.read().split("\n")
+    if(all_lines == ['']):
+       dictionary[go_type] = []
+       return dictionary
+    dataset = pd.read_csv(filename, header= None, sep="\t")
+    sub_df = dataset[dataset[2] == dataset[2].max()]
+    dictionary[go_type] = list(sub_df[3])
     return dictionary
 
-def process_go(dict_all, path_out):
+def process_go(dict_all, path_out, id):
+    print("Procesando GO")
     command= "metastudent -i {} -o {}seq_GO_".format(path_out, path_out.replace("fasta/", "temp/").replace("fasta",""))
     salida=subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
     files=os.listdir("./temp")
-    files = [value for value in files if "_GO_" in value]
+    files = [value for value in files if id in value]
     sub_dict = {}
-    get_values_GO("./temp/"+files[0], sub_dict, "Biological_Process", "BPO")
-    get_values_GO("./temp/"+files[1], sub_dict, "Celular_Component", "CCO")
-    get_values_GO("./temp/"+files[2], sub_dict, "Molecular_Function", "MFO")
+    for file in files:
+        if("BPO.txt" in file):
+            get_values_GO("./temp/"+file, sub_dict, "Biological_Process", "BPO")
+        if("MFO.txt" in file):
+            get_values_GO("./temp/"+file, sub_dict, "Celular_Component", "CCO")
+        if("CCO.txt" in file):
+            get_values_GO("./temp/"+file, sub_dict, "Molecular_Function", "MFO")
     os.system("rm ./temp/{} ./temp/{} ./temp/{}".format(files[0], files[1], files[2]))
     dict_all["Gene Ontology"] = sub_dict
     return dict_all
 
 def process_pfam(dict_all, fasta):
+    print("Procesando PFAM")
     command= "curl -k -LH 'Expect:' -F seq='<{}' -F output=xml 'https://pfam.xfam.org/search/sequence'".format(fasta)					
     salida=subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
     link_search=str(salida).split("result_url")
@@ -76,6 +82,7 @@ def process_pfam(dict_all, fasta):
     return dict_all
 
 def process_structural(dict_all, fasta):
+    print("Procesando Structural")
     ss3_properties=["H_ss3", "E_ss3", "C_ss3"]
     ss8_properties= [ "H_ss8", "G_ss8", "I_ss8", "E_ss8", "B_ss8", "T_ss8", "S_ss8", "L_ss8"]
     acc_properties=["B_acc", "M_acc", "E_acc"]
@@ -116,25 +123,25 @@ def process(row):
     row = row[1]
     id = row[0]
     print("procesando", row[0])
-    try:
-        record = SeqRecord.SeqRecord(Seq.Seq(row.sequence), row.id, "", "")
-        path_out = "fasta/{}_temp.fasta".format(id)
-        SeqIO.write(record, path_out, "fasta")
-        dict_all={"id": row.id, "sequence": row.sequence}
-        dict_all = process_go(dict_all, path_out)
-        dict_all = process_pfam(dict_all, path_out)
-        dict_all = process_structural(dict_all, path_out)
-        f = open("Success.txt", "a")
-        f.write(row[0] + "\n")
-        f.close()
+    #try:
+    record = SeqRecord.SeqRecord(Seq.Seq(row.sequence), row.id, "", "")
+    path_out = "fasta/{}_temp.fasta".format(id)
+    SeqIO.write(record, path_out, "fasta")
+    dict_all={"id": row.id, "sequence": row.sequence}
+    dict_all = process_go(dict_all, path_out, id)
+    dict_all = process_pfam(dict_all, path_out)
+    dict_all = process_structural(dict_all, path_out)
+    f = open("Success.txt", "a")
+    f.write(row[0] + "\n")
+    f.close()
 	
-        print("exitoso", row[0])
-    except:
+    print("exitoso", row[0])
+    """except:
         f = open("Errors.txt", "a")
         f.write(row[0] + "\n")
         f.close()
         dict_all = {"id": row.id, "sequence": row.sequence}
-        print("fallido", row[0])
+        print("fallido", row[0])"""
     return dict_all
 if __name__ == '__main__':
     try:
