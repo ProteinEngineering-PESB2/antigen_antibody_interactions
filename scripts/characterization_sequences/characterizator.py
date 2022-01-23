@@ -127,13 +127,14 @@ def process(row):
         SeqIO.write(record, path_out, "fasta")
         dict_all={"id": row.id_seq, "sequence": row.seq}
         dict_all = process_go(dict_all, path_out, id)
-        #dict_all = process_pfam(dict_all, path_out)
-        #dict_all = process_structural(dict_all, path_out)
+        dict_all = process_pfam(dict_all, path_out)
+        dict_all = process_structural(dict_all, path_out)
         f = open("Success.txt", "a")
         f.write(row[0] + "\n")
         f.close()
         print("exitoso", row[0])
-    except:
+    except Exception as e:
+	print(e)
         f = open("Errors.txt", "a")
         f.write(row[0] + "\n")
         f.close()
