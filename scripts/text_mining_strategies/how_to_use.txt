@@ -1,0 +1,19 @@
+Pueden ocupar dos estrategias de codificación:
+1. TFID 
+2. doc2vec
+
+Necesitan scikit-learn y gensim, instalar con pip dentro del ambiente que están generando
+también requieren instalar NLTK
+
+el dataset debe contener las descripciones en una columna, idealmente adicionen un ID 
+
+Fijarse el nombre de la columna: la descripción debe llamarse "description" la columna.
+
+Los explorer del TFID puede simplemente correrlos.
+
+Los explorer del doc2vec pueden variar los siguientes parámetros
+vec_size: actualmente es un for hasta 30, pueden jugar con los tamaños
+alpha = 0.025, pueden varia entre 0.01 y 0.9
+
+La selección se basa en métodos estadísticos, pueden evaluar la distribución de los resultados 
+obtenidos antes de identificar.
