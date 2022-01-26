@@ -14,7 +14,7 @@
 
 ## Consideraciones:
 
-El archivo .csv con las secuencias tiene que tener las columnas [id,sequence].
+El archivo .csv con las secuencias tiene que tener las columnas [id_seq,seq].
 
 Archivo de prueba: test.csv
 
